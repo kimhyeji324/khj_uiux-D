@@ -13,8 +13,8 @@
       --text-muted: #787774;
       --border-color: #e9e9e7;
       --hover-bg: #efedeb;
-      --accent-urgent: #e03131; /* 제출 임박 포인트 컬러 */
-      --accent-success: #08a045; /* 피드백 완료 포인트 컬러 */
+      --accent-urgent: #e03131;
+      --accent-success: #08a045;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     }
 
@@ -124,7 +124,7 @@
       font-size: 12px;
     }
 
-    /* Dashboard Grid Layout (New Additions) */
+    /* Dashboard Grid Layout */
     section.dashboard-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -164,7 +164,7 @@
       font-weight: 500;
     }
 
-    /* Task Cards (Minimalist & Brutalism) */
+    /* Task Cards */
     article.task-card {
       border: 1px solid var(--border-color);
       padding: 20px;
@@ -179,7 +179,6 @@
       border-color: var(--text-color);
     }
 
-    /* Focus Area (제출 대기) */
     .task-card.focus {
       border-left: 4px solid var(--accent-urgent);
     }
@@ -189,10 +188,9 @@
       font-weight: 600;
     }
 
-    /* Muted Area (평가 대기) */
     .task-card.muted {
       border-color: transparent;
-      border-top: 1px solid var(--border-color); /* Brutalism style horizontal separator */
+      border-top: 1px solid var(--border-color);
       background-color: transparent;
     }
     
@@ -200,7 +198,6 @@
       color: var(--text-muted);
     }
 
-    /* Success Area (피드백 완료) */
     .task-card.success .task-meta.badge {
       color: var(--accent-success);
       font-weight: 600;
@@ -226,7 +223,8 @@
       border: none;
       background: none;
       font-family: inherit;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+      width: 100%;
     }
 
     .action-btn:hover {
@@ -252,6 +250,157 @@
       padding-left: 0;
     }
 
+    /* Slide-over Panel */
+    .slide-over-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+      z-index: 20;
+    }
+
+    .slide-over-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    aside.slide-over {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 480px;
+      height: 100vh;
+      background-color: var(--bg-color);
+      border-left: 1px solid var(--border-color);
+      z-index: 30;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    aside.slide-over.open {
+      transform: translateX(0);
+    }
+
+    .panel-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      padding-right: 16px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close-btn:hover {
+      color: var(--text-color);
+    }
+
+    .panel-body {
+      padding: 24px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .panel-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    .panel-meta span.label {
+      color: var(--text-muted);
+      display: inline-block;
+      width: 80px;
+    }
+
+    /* Drag & Drop Zone */
+    .drop-zone {
+      border: 1px dashed var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+      cursor: pointer;
+      min-height: 250px;
+      background-color: var(--bg-color);
+    }
+
+    .drop-zone.dragover {
+      border: 1px solid var(--text-color);
+      background-color: var(--hover-bg);
+      color: var(--text-color);
+    }
+
+    .drop-zone-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      pointer-events: none;
+    }
+
+    .drop-zone-subtext {
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .submit-btn-wrapper {
+      margin-top: auto;
+      padding-top: 24px;
+    }
+
+    /* Toast Notification (New) */
+    .toast-notification {
+      position: fixed;
+      bottom: -100px;
+      right: 40px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-success);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 약간의 그림자만 허용하여 배경과 분리 */
+      transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast-notification.show {
+      bottom: 40px;
+    }
   </style>
 </head>
 <body>
@@ -281,13 +430,13 @@
         <article class="task-card focus">
           <div class="task-meta">오늘 마감 (D-Day)</div>
           <h3 class="task-name">웹 표준을 준수한 시맨틱 HTML 이력서 마크업</h3>
-          <button class="action-btn solid">제출하러 가기</button>
+          <button class="action-btn solid" data-status="제출 대기" data-deadline="오늘 마감 (2026.03.10 23:59)">제출하러 가기</button>
         </article>
 
         <article class="task-card focus">
           <div class="task-meta" style="color: var(--text-muted); font-weight: normal;">마감: 2026.03.14 (D-4)</div>
           <h3 class="task-name">자바스크립트를 활용한 모달 창 상태 관리 구현</h3>
-          <button class="action-btn solid">제출하러 가기</button>
+          <button class="action-btn solid" data-status="제출 대기" data-deadline="2026.03.14 23:59">제출하러 가기</button>
         </article>
       </div>
 
@@ -297,7 +446,7 @@
         <article class="task-card muted">
           <div class="task-meta">제출 일시: 2026.03.09 14:30</div>
           <h3 class="task-name">반응형 웹을 위한 CSS Grid/Flexbox 레이아웃 구축</h3>
-          <button class="action-btn outline">파일 교체하기</button>
+          <button class="action-btn outline" data-status="평가 대기 (제출 완료)" data-deadline="2026.03.12 23:59">파일 교체하기</button>
         </article>
       </div>
 
@@ -314,6 +463,33 @@
     </section>
   </main>
 
+  <div class="slide-over-overlay" id="panelOverlay"></div>
+  <aside class="slide-over" id="slidePanel">
+    <div class="panel-header">
+      <h2 class="panel-title" id="panelTitle">과제명</h2>
+      <button class="close-btn" id="closePanelBtn">&times;</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel-meta">
+        <p><span class="label">상태</span> <strong id="panelStatus">제출 대기</strong></p>
+        <p><span class="label">마감일</span> <span id="panelDeadline">2026.03.14</span></p>
+      </div>
+      
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-text">여기로 파일을 끌어다 놓거나 클릭해서 첨부하세요.</div>
+        <div class="drop-zone-subtext">최대 50MB, PDF 및 ZIP 파일 지원</div>
+      </div>
+
+      <div class="submit-btn-wrapper">
+        <button class="action-btn solid" id="submitBtn" style="padding: 14px; font-size: 14px;">제출 완료하기</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast-notification" id="toastNotification">
+    <span>✅ 과제가 성공적으로 제출되었습니다.</span>
+  </div>
+
   <script>
     // Theme Toggle Logic
     const themeToggle = document.getElementById('themeToggle');
@@ -329,7 +505,7 @@
       }
     });
 
-    // Sticky Header Border on Scroll Logic
+    // Sticky Header Border on Scroll
     const dashboardArea = document.getElementById('dashboardArea');
     const topNav = document.getElementById('topNav');
 
@@ -340,6 +516,142 @@
         topNav.classList.remove('scrolled');
       }
     });
+
+    // Panel & Interaction Variables
+    const actionBtns = document.querySelectorAll('.action-btn.solid, .action-btn.outline');
+    const slidePanel = document.getElementById('slidePanel');
+    const panelOverlay = document.getElementById('panelOverlay');
+    const closePanelBtn = document.getElementById('closePanelBtn');
+    const panelTitle = document.getElementById('panelTitle');
+    const panelStatus = document.getElementById('panelStatus');
+    const panelDeadline = document.getElementById('panelDeadline');
+    const submitBtn = document.getElementById('submitBtn');
+    const toastNotification = document.getElementById('toastNotification');
+    
+    let currentTaskCard = null; // 현재 열려있는 카드를 추적
+
+    // Open Panel
+    function openPanel(card, taskName, status, deadline) {
+      currentTaskCard = card;
+      panelTitle.textContent = taskName;
+      panelStatus.textContent = status;
+      panelDeadline.textContent = deadline;
+      
+      // 상태에 따른 마이크로 카피 및 버튼 스타일 변경
+      if (status.includes('제출 대기')) {
+        submitBtn.textContent = '제출 완료하기';
+        submitBtn.className = 'action-btn solid';
+      } else {
+        submitBtn.textContent = '파일 교체하기';
+        submitBtn.className = 'action-btn outline';
+      }
+
+      slidePanel.classList.add('open');
+      panelOverlay.classList.add('show');
+    }
+
+    function closePanel() {
+      slidePanel.classList.remove('open');
+      panelOverlay.classList.remove('show');
+      resetDropZone();
+    }
+
+    actionBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.task-card');
+        const taskName = card.querySelector('.task-name').textContent;
+        const status = btn.getAttribute('data-status');
+        const deadline = btn.getAttribute('data-deadline');
+        openPanel(card, taskName, status, deadline);
+      });
+    });
+
+    closePanelBtn.addEventListener('click', closePanel);
+    panelOverlay.addEventListener('click', closePanel);
+
+    // Drag and Drop Logic
+    const dropZone = document.getElementById('dropZone');
+    const dropZoneText = dropZone.querySelector('.drop-zone-text');
+    const dropZoneSubtext = dropZone.querySelector('.drop-zone-subtext');
+
+    function resetDropZone() {
+      dropZone.classList.remove('dragover');
+      dropZone.style.border = '';
+      dropZoneText.textContent = '여기로 파일을 끌어다 놓거나 클릭해서 첨부하세요.';
+      dropZoneSubtext.style.display = 'block';
+    }
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileSelect(files[0]);
+      }
+    });
+
+    dropZone.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.onchange = e => {
+        const files = e.target.files;
+        if (files.length > 0) {
+          handleFileSelect(files[0]);
+        }
+      };
+      input.click();
+    });
+
+    function handleFileSelect(file) {
+      dropZoneText.textContent = `📄 첨부 완료: ${file.name}`;
+      dropZoneSubtext.style.display = 'none';
+      dropZone.style.border = '1px solid var(--text-color)';
+    }
+
+    // Submit & Interaction Logic
+    submitBtn.addEventListener('click', () => {
+      // 1. 토스트 알림 표시
+      toastNotification.classList.add('show');
+      setTimeout(() => {
+        toastNotification.classList.remove('show');
+      }, 3500);
+
+      // 2. 패널 내부 마이크로 카피 변경
+      submitBtn.textContent = '파일 교체하기';
+      submitBtn.className = 'action-btn outline';
+      panelStatus.textContent = '평가 대기 (제출 완료)';
+
+      // 3. 대시보드의 기존 카드 상태 즉시 업데이트
+      if (currentTaskCard && currentTaskCard.classList.contains('focus')) {
+        currentTaskCard.classList.remove('focus');
+        currentTaskCard.classList.add('muted');
+        
+        const meta = currentTaskCard.querySelector('.task-meta');
+        if (meta) {
+          meta.textContent = '제출 완료 (방금 전)';
+          meta.style.color = 'var(--text-muted)';
+          meta.style.fontWeight = 'normal';
+        }
+
+        const cardBtn = currentTaskCard.querySelector('.action-btn');
+        if (cardBtn) {
+          cardBtn.textContent = '파일 교체하기';
+          cardBtn.className = 'action-btn outline';
+          cardBtn.setAttribute('data-status', '평가 대기 (제출 완료)');
+        }
+      }
+    });
+
   </script>
 </body>
 </html>
