@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace</title>
+  <style>
+    /* CSS Variables for Light/Dark Mode */
+    :root {
+      --bg-color: #ffffff;
+      --sidebar-bg: #f7f6f3;
+      --text-color: #37352f;
+      --text-muted: #787774;
+      --border-color: #e9e9e7;
+      --hover-bg: #efedeb;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #191919;
+      --sidebar-bg: #202020;
+      --text-color: #ffffff;
+      --text-muted: #9b9b9b;
+      --border-color: #373737;
+      --hover-bg: #2f2f2f;
+    }
+
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Layout: Sidebar */
+    aside.sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    nav.sidebar-nav {
+      flex: 1;
+      padding: 10px 0;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      padding: 8px 16px;
+      font-size: 14px;
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .nav-item:hover {
+      background-color: var(--hover-bg);
+    }
+
+    /* Layout: Main Content */
+    main.content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Sticky Header */
+    header.top-nav {
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background-color 0.3s;
+      z-index: 10;
+    }
+
+    header.top-nav.scrolled {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    /* Editor Space */
+    article.editor {
+      padding: 40px 80px;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .page-title {
+      font-size: 40px;
+      font-weight: 700;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-color);
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .page-title[data-placeholder]:empty:before {
+      content: attr(data-placeholder);
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .block-editor {
+      font-size: 16px;
+      line-height: 1.6;
+      outline: none;
+      min-height: 50vh;
+    }
+
+    .block-editor[data-placeholder]:empty:before {
+      content: attr(data-placeholder);
+      color: var(--text-muted);
+      cursor: text;
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      Jane's Workspace
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item">📄 시작하기</div>
+      <div class="nav-item">📝 작업 목록</div>
+      <div class="nav-item">💡 아이디어 노트</div>
+    </nav>
+  </aside>
+
+  <main class="content-area">
+    <header class="top-nav" id="topNav">
+      <div class="breadcrumb">Jane's Workspace / 아이디어 노트</div>
+      <button class="theme-toggle" id="themeToggle">Dark Mode</button>
+    </header>
+
+    <article class="editor" id="editorArea">
+      <div class="page-title" contenteditable="true" data-placeholder="제목 없음"></div>
+      <div class="block-editor" contenteditable="true" data-placeholder="'/'를 입력하여 명령어를 사용해 보세요"></div>
+    </article>
+  </main>
+
+  <script>
+    // Theme Toggle Logic
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+
+    themeToggle.addEventListener('click', () => {
+      if (root.getAttribute('data-theme') === 'dark') {
+        root.removeAttribute('data-theme');
+        themeToggle.textContent = 'Dark Mode';
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = 'Light Mode';
+      }
+    });
+
+    // Sticky Header Border on Scroll Logic
+    const editorArea = document.getElementById('editorArea');
+    const topNav = document.getElementById('topNav');
+
+    editorArea.addEventListener('scroll', () => {
+      if (editorArea.scrollTop > 10) {
+        topNav.classList.add('scrolled');
+      } else {
+        topNav.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
